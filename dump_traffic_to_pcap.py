@@ -1,10 +1,28 @@
 # Step 1: Import packages and set the working directory
 import subprocess as sub
 import os
-from flowmeter import Flowmeter
+# from flowmeter import Flowmeter
 from rich import print
 from rich.theme import Theme
 from rich.console import Console
+
+
+from scapy.all import sniff, wrpcap
+
+def capture_packets(interface='wlp0s20f3', packet_count=10, file_name='captured_packets.pcap'):
+    """
+    Captures a specified number of packets on the given network interface and saves them to a PCAP file.
+
+    :param interface: The network interface to capture packets from (e.g., 'eth0').
+    :param packet_count: The number of packets to capture.
+    :param file_name: The name of the file to save the captured packets to.
+    """
+    print(f"Capturing {packet_count} packets on interface {interface}...")
+    packets = sniff(iface=interface, count=packet_count)
+    print(f"Saving captured packets to {file_name}...")
+    wrpcap(file_name, packets)
+    print("Done.")
+
 
 # dict of rich colors
 # color used in project
@@ -38,8 +56,8 @@ rc = Console(record=True, theme=ct)
 
 file = 0
 
-# while(file <= 5):
-while True:
+while(file <= 5):
+# while True:
     file_name = file + 1
 
     rc.log(
@@ -47,12 +65,11 @@ while True:
 
     rc.log(
         "\n[blue]<--------------------File {}------------------------>[/]\n".format(file_name))
+    
+    file_name = 'pcapF/data{}.pcap'.format(file_name)
+    
+    p = capture_packets(interface='wlp0s20f3', packet_count=100, file_name=file_name)
 
-    p = sub.Popen(('sudo dumpcap', '-i', 'wlp0s20f3', '-a', 'filesize:10',
-                   '-w', 'pcapF/data{}.pcap'.format(file_name)), stdout=sub.PIPE)
-
-    for row in iter(p.stdout.readline, b''):
-        rc.log(row.rstrip())   # process here
 
     rc.log(
         "\n[good][ DONE ][/][cyan] - Saved pcap file as data{}.pcap[/]\n".format(file_name))
@@ -68,26 +85,26 @@ while True:
 
     arr = os.listdir(path)
     cat_pcap = path + arr[file]
-    print(cat_pcap, 'for this filw')
-    feature_gen = Flowmeter(offline=data_pcap, outfunc=None,
-                            outfile='csvs/merged_data.csv')
-    feature_gen.run()
+    print(cat_pcap, 'for this file')
+    # feature_gen = Flowmeter(offline=data_pcap, outfunc=None,
+    #                         outfile='csvs/merged_data.csv')
+    # feature_gen.run()
     
  
     
 
     # Normalize and preprocessing of *.csv file to fed the ML/ DL models.
-    os.system(
-        'python3 norrm.py')
+    # os.system(
+    #     'python3 norrm.py')
 
     # classify the activity from model
-    os.system(
-        'python3 model.py')
-    g = 'pcapF/data{}.pcap'.format(file_name)
-    f = 'csvs/out{}.csv'.format(file_name)
-    gg = 'csvs/merged_data.csv'
+    # os.system(
+    #     'python3 model.py')
+    # g = 'pcapF/data{}.pcap'.format(file_name)
+    # f = 'csvs/out{}.csv'.format(file_name)
+    # gg = 'csvs/merged_data.csv'
     # os.remove(gg)
-    print(data_pcap, 'cat')
+    # print(data_pcap, 'cat')
     
 
 
