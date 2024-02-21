@@ -22,17 +22,17 @@ rc = Console(record=True, theme=ct)
 
 # Step2: Include files for logo, dashboard and task manager
 
-os.system(
-    'python3 rich/logo.py')
+# os.system(
+#     'python3 rich/logo.py')
 
-os.system(
-    'python3 rich/task-analyzer.py')
+# os.system(
+#     'python3 rich/task-analyzer.py')
 
-os.system(
-    'python3 rich/cli_dashboard.py')
-# 
-os.system(
-    'python3 rich/logo.py')
+# os.system(
+#     'python3 rich/cli_dashboard.py')
+# # 
+# os.system(
+#     'python3 rich/logo.py')
 
 # Step 3: Capture network traffic and dump in to a *.pcap file formate
 
@@ -48,7 +48,7 @@ while True:
     rc.log(
         "\n[blue]<--------------------File {}------------------------>[/]\n".format(file_name))
 
-    p = sub.Popen(('dumpcap', '-i', 'wlp0s20f3', '-a', 'filesize:10',
+    p = sub.Popen(('sudo dumpcap', '-i', 'wlp0s20f3', '-a', 'filesize:10',
                    '-w', 'pcapF/data{}.pcap'.format(file_name)), stdout=sub.PIPE)
 
     for row in iter(p.stdout.readline, b''):

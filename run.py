@@ -16,7 +16,7 @@ os.system(
 os.system(
     'python3 norrm.py')
 
-# os.system('csv_to_h5.py')
+os.system('csv_to_h5.py')
 
 os.system(
     'python3 model.py')
